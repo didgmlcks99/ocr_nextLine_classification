@@ -175,6 +175,8 @@ def getKo():
 
 def mk_processedData(df):
     df.to_csv("../data/processed/data.csv", index=False, header=False)
+    df.to_excel('../data/processed/data.xlsx', index=False, header=False, sheet_name='sheet1')
+    df.to_csv("../data/processed/data", index=False, header=False)
 
     sentences_df = df[['first', 'second']]
     label = df['label']
@@ -192,4 +194,9 @@ def mk_processedData(df):
     label_df = pd.DataFrame(label_list, columns=['label'])
 
     sentences_df.to_csv("../data/processed/sentence.csv", index=False, header=False)
+    sentences_df.to_excel('../data/processed/sentence.xlsx', index=False, header=False, sheet_name='sheet1')
+    sentences_df.to_csv("../data/processed/sentence", index=False, header=False)
+
     label_df.to_csv("../data/processed/label.csv", index=False, header=False)
+    label_df.to_excel('../data/processed/label.xlsx', index=False, header=False, sheet_name='sheet1')
+    label_df.to_csv("../data/processed/label", index=False, header=False)
