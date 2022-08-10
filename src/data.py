@@ -174,7 +174,7 @@ def getKo():
     return total_data
 
 def mk_processedData(df):
-    df.to_csv("../data/processed/data.csv")
+    df.to_csv("../data/processed/data.csv", header=False)
 
     sentences_df = df[['first', 'second']]
     label = df['label']
@@ -191,5 +191,5 @@ def mk_processedData(df):
     sentences_df = pd.DataFrame(sentences_list, columns=['sentence'])
     label_df = pd.DataFrame(label_list, columns=['label'])
 
-    sentences_df.to_csv("../data/processed/sentence.csv", index=False)
-    label_df.to_csv("../data/processed/label.csv", index=False)
+    sentences_df.to_csv("../data/processed/sentence.csv", index=False, header=False)
+    label_df.to_csv("../data/processed/label.csv", index=False, header=False)
