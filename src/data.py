@@ -44,7 +44,9 @@ def getData():
 
     random.shuffle(tot_data)
 
-    return tot_data
+    df = pd.DataFrame(tot_data, columns =['first', 'second', 'label']) 
+
+    return df
 
 
 def getChatBot():
