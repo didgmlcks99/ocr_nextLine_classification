@@ -44,7 +44,7 @@ def getData():
 
     random.shuffle(tot_data)
 
-    df = pd.DataFrame(tot_data, columns =['first', 'second', 'label']) 
+    df = pd.DataFrame(tot_data, columns=['first', 'second', 'label']) 
 
     return df
 
@@ -172,3 +172,24 @@ def getKo():
         if data_cnt == 10000: break
 
     return total_data
+
+def mk_processedData(df):
+    df.to_csv("../data/processed/data.csv")
+
+    sentences_df = df[['first', 'second']]
+    label = df['label']
+
+    sentences_list = []
+    label_list = []
+
+    for index, row in df.iterrows():
+        sentences_list.append(row['first'])
+        sentences_list.append(row['second'])
+
+        label_list.append(row['label'])
+    
+    sentences_df = pd.DataFrame(sentences_list, columns=['sentence'])
+    label_df = pd.DataFrame(label_list, columns=['label'])
+
+    sentences_df.to_csv("../data/processed/sentence.csv", index=False)
+    label_df.to_csv("../data/processed/label.csv", index=False)
