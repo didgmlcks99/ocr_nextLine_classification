@@ -21,13 +21,13 @@ def initialize_model(
     if model_name=="RNN":
 
         model = om.OCR(
-            vocab_size=vocab_size,
-            embed_dim=embed_dim,
+            input_size=vocab_size,
+            word_vec_size=embed_dim,
             hidden_size=hidden_size,
-            num_classes=num_classes,
-            rnn_layers=rnn_layers,
-            dropout=dropout,
-            pretrained_model=pretrained_model,
+            n_classes=num_classes,
+            n_layers=rnn_layers,
+            dropout_p=dropout,
+            pretrained_embedding=pretrained_model,
             freeze_embedding=freeze_embedding
         )
     

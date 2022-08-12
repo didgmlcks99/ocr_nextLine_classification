@@ -25,8 +25,8 @@ def train(
     best_accuracy = 0
 
     print("Start training...\n")
-    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Val Loss':^10} | {'Val Acc':^9} | {'Elapsed':^9}")
-    print("-"*60)
+    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Train Acc':^10} | {'Val Loss':^8} | {'Val Acc':^6} | {'Elapsed':^6}")
+    print("-"*80)
 
     for epoch_i in range(epochs):
 
@@ -45,11 +45,12 @@ def train(
         tot_train_acc = []
 
         for step, batch in enumerate(train_dataloader):
-             # Load batch to GPU
+            # Load batch to GPU
             firsts, seconds, labels = tuple(t.to(device) for t in batch)
 
             # Zero out any previously calculated gradients
-            model.zero_grad()
+            # model.zero_grad()
+            optimizer.zero_grad()
 
             # Perform a forward pass. This will return logits.
             logits = model(firsts, seconds)
@@ -85,9 +86,9 @@ def train(
             # After the completion of each training epoch, measure the model's
             # performance on our validation set.
             val_loss, val_acc = evaluate(device=device,
-                                              model=model,
-                                              loss_fn=loss_fn,
-                                              val_dataloader=val_dataloader)
+                                         model=model,
+                                         loss_fn=loss_fn,
+                                         val_dataloader=val_dataloader)
 
             # Track the best accuracy
             if val_acc > best_accuracy:
@@ -95,7 +96,7 @@ def train(
 
             # Print performance over the entire training data
             time_elapsed = time.time() - t0_epoch
-            print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {avg_train_acc:^10.6f} | {val_loss:^8.6f} | {val_acc:^6.2f} | {time_elapsed:^4.2f}")
+            print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {avg_train_acc:^10.6f} | {val_loss:^8.6f} | {val_acc:^6.2f} | {time_elapsed:^6.2f}")
 
         writer.add_scalars(title + '-Loss',
                 { 'Train' : avg_train_loss, 'Test' : val_loss },

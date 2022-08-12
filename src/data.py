@@ -174,7 +174,7 @@ def getKo():
 
     return total_data
 
-def mk_processedData(df):
+def mk_initData(df):
     # df.to_csv("../data/processed/data.csv", index=False, header=False)
     # df.to_excel('../data/processed/data.xlsx', index=False, header=False, sheet_name='sheet1')
     df.to_csv("../data/processed/data", index=False, header=False)
