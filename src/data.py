@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+import numpy as np
 
 def cut(sentence):
     words = sentence.split()
@@ -35,7 +36,7 @@ def makeData(class_cnt, cut_cnt, first, second):
 
     return [first, second, label]
 
-def getData():
+def getInitData():
     tot_data = []
     
     tot_data += getChatBot()
@@ -83,7 +84,7 @@ def getKCC():
     kccQ_txt = '../data/raw/KCCq28_Korean_sentences_UTF8_v2.txt'
 
     kccN_df = pd.read_csv(kccN_txt, sep='\t', header=None)
-    kccQ_df = pd.read_csv(kccQ_txt, sep='\t', header=None)\
+    kccQ_df = pd.read_csv(kccQ_txt, sep='\t', header=None)
     
     sentence_list = []
 
@@ -174,8 +175,8 @@ def getKo():
     return total_data
 
 def mk_processedData(df):
-    df.to_csv("../data/processed/data.csv", index=False, header=False)
-    df.to_excel('../data/processed/data.xlsx', index=False, header=False, sheet_name='sheet1')
+    # df.to_csv("../data/processed/data.csv", index=False, header=False)
+    # df.to_excel('../data/processed/data.xlsx', index=False, header=False, sheet_name='sheet1')
     df.to_csv("../data/processed/data", index=False, header=False)
 
     sentences_df = df[['first', 'second']]
@@ -193,10 +194,41 @@ def mk_processedData(df):
     sentences_df = pd.DataFrame(sentences_list, columns=['sentence'])
     label_df = pd.DataFrame(label_list, columns=['label'])
 
-    sentences_df.to_csv("../data/processed/sentence.csv", index=False, header=False)
-    sentences_df.to_excel('../data/processed/sentence.xlsx', index=False, header=False, sheet_name='sheet1')
-    sentences_df.to_csv("../data/processed/sentence", index=False, header=False)
+    # sentences_df.to_csv("../data/processed/sentence.csv", index=False, header=False)
+    # sentences_df.to_excel('../data/processed/sentence.xlsx', index=False, header=False, sheet_name='sheet1')
+    # sentences_df.to_csv("../data/processed/sentence", index=False, header=False)
+    to_file(sentences_list, "../data/processed/sentence")
 
-    label_df.to_csv("../data/processed/label.csv", index=False, header=False)
-    label_df.to_excel('../data/processed/label.xlsx', index=False, header=False, sheet_name='sheet1')
+    # label_df.to_csv("../data/processed/label.csv", index=False, header=False)
+    # label_df.to_excel('../data/processed/label.xlsx', index=False, header=False, sheet_name='sheet1')
     label_df.to_csv("../data/processed/label", index=False, header=False)
+
+    sentences_df.to_csv("../data/train_tokenizer.txt", index=False, header=False)
+    to_file(sentences_list, "../data/train_tokenizer.txt")
+
+def to_file(ls, fn):
+
+    with open(fn, 'w') as f:
+        f.write('\n'.join(ls))
+
+def getData():
+    
+    first = []
+    second = []
+    labels = []
+    
+    with open('../data/processed/sentence', 'r') as f:
+        sentences = f.read().splitlines()
+
+        for i in range(0, len(sentences), 2):
+            
+            first.append(str(sentences[i]))
+            second.append(str(sentences[i+1]))
+    
+    with open('../data/processed/label', 'r') as f:
+        ls = f.read().splitlines()
+
+        for d in ls:
+            labels.append(int(d))
+    
+    return np.array(first), np.array(second), np.array(labels)
