@@ -72,12 +72,16 @@ def tokenize(first, second):
 
     return first_ls, second_ls, ch2idx, max_len
 
-def enc(data, ch2idx, max_len):
+def enc(data, ch2idx, max_len, stat):
     ls = []
 
     for s in data:
-        s += ['<pad>'] * (max_len - len(s))
 
+        if stat == 1:
+            s = (['<pad>'] * (max_len - len(s))) + s
+        else:
+            s += ['<pad>'] * (max_len - len(s))
+            
         toked_id = [ch2idx.get(token) for token in s]
 
         ls.append(toked_id)
@@ -86,7 +90,7 @@ def enc(data, ch2idx, max_len):
 
 def encode(first, second, ch2idx, max_len):
 
-    first2idx_np = enc(first, ch2idx, max_len)
-    second2idx_np = enc(second, ch2idx, max_len)
+    first2idx_np = enc(first, ch2idx, max_len, 1)
+    second2idx_np = enc(second, ch2idx, max_len, 0)
 
     return first2idx_np, second2idx_np
