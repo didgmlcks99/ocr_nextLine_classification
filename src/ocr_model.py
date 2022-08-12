@@ -88,7 +88,7 @@ class OCR(nn.Module):
             self.dropout_p
         )
 
-        self. fc1 = nn.Linear(
+        self.fc1 = nn.Linear(
             self.hidden_size*2*2, 
             self.n_classes
         )

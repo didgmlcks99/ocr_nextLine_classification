@@ -42,7 +42,7 @@ def train(
 
         # Put the model into the training mode
         model.train()
-        train_accuracy = []
+        tot_train_acc = []
 
         for step, batch in enumerate(train_dataloader):
              # Load batch to GPU
@@ -63,7 +63,7 @@ def train(
 
             # Calculate the accuracy rate
             accuracy = (preds == labels).cpu().numpy().mean() * 100
-            train_accuracy.append(accuracy)
+            tot_train_acc.append(accuracy)
 
             # Perform a backward pass to calculate gradients
             loss.backward()
@@ -75,7 +75,7 @@ def train(
 
         # Calculate the average loss over the entire training data
         avg_train_loss = np.mean(tot_train_loss)
-        train_accuracy = np.mean(train_accuracy)
+        avg_train_acc = np.mean(tot_train_acc)
 
         # =======================================
         #               Evaluation
@@ -84,25 +84,25 @@ def train(
         if val_dataloader is not None:
             # After the completion of each training epoch, measure the model's
             # performance on our validation set.
-            val_loss, val_accuracy = evaluate(device=device,
+            val_loss, val_acc = evaluate(device=device,
                                               model=model,
                                               loss_fn=loss_fn,
                                               val_dataloader=val_dataloader)
 
             # Track the best accuracy
-            if val_accuracy > best_accuracy:
-                best_accuracy = val_accuracy
+            if val_acc > best_accuracy:
+                best_accuracy = val_acc
 
             # Print performance over the entire training data
             time_elapsed = time.time() - t0_epoch
-            print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {val_loss:^10.6f} | {val_accuracy:^9.2f} | {time_elapsed:^9.2f}")
+            print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {avg_train_acc:^10.6f} | {val_loss:^8.6f} | {val_acc:^6.2f} | {time_elapsed:^4.2f}")
 
         writer.add_scalars(title + '-Loss',
                 { 'Train' : avg_train_loss, 'Test' : val_loss },
                 epoch_i + 1)
 
         writer.add_scalars(title + '-Accuracy',
-                    { 'Train' : train_accuracy, 'Test' : val_accuracy },
+                    { 'Train' : avg_train_acc, 'Test' : val_acc },
                     epoch_i + 1)
     
 
