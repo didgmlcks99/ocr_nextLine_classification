@@ -1,13 +1,17 @@
 import torch
 import torch.nn as nn
 import numpy as np
+from sklearn import metrics
+import pandas as pd
 
 def test(
     test_dataloader=None,
     device=None, 
-    model=None):
+    model=None,
+    title='tests'):
     
     loss_fn = nn.CrossEntropyLoss()
+    model.to(device)
     model.eval()
 
     tot_loss = []
@@ -39,4 +43,10 @@ def test(
     print('test loss: ', fin_loss)
     print('test acc: ', fin_acc)
 
-    return tot_pred, 
+    results = metrics.classification_report(tot_label.cpu(), tot_pred.cpu(), output_dict=True)
+    results_df = pd.DataFrame.from_dict(results).transpose()
+    results_df.to_excel('../result/'+title+'.xlsx', sheet_name='sheet1')
+
+    print('saved precision and recall results to file!')
+    
+    return tot_pred, tot_label

@@ -38,6 +38,11 @@ def process_splitted(first, second):
 
     return first_np, second_np
 
+def split_syll(sentence):
+    splitted = split_syllables(sentence)
+    
+    return splitted
+
 def split(str):
     return [char for char in str]
 

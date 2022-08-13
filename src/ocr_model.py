@@ -90,16 +90,17 @@ class OCR(nn.Module):
 
         self.fc1 = nn.Linear(
             self.hidden_size*2*2,
-            self.n_classes 
-            # 300
+            # self.n_classes
+            300
         )
 
-        # self.fc2 = nn.Linear(
-        #     300, 
-        #     self.n_classes
-        # )
+        self.fc2 = nn.Linear(
+            300, 
+            self.n_classes
+        )
 
-        self.dropout = nn.Dropout(self.dropout_p)
+        self.dp1 = nn.Dropout(self.dropout_p)
+        self.dp2 = nn.Dropout(self.dropout_p)
     
     def forward(self, x1, x2):
 
@@ -111,7 +112,7 @@ class OCR(nn.Module):
 
         y = torch.cat((a, b), 1)
 
-        y = self.fc1(self.dropout(F.relu(y)))
-        # y = self.fc2(self.dropout(F.relu(y)))
+        y = self.fc1(self.dp1(F.relu(y)))
+        y = self.fc2(self.dp2(F.relu(y)))
 
         return y

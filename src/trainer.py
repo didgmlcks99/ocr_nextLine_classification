@@ -23,7 +23,8 @@ def train(
     loss_fn=None):
 
     best_accuracy = 0
-
+    model.to(device)
+    
     print("Start training...\n")
     print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Train Acc':^10} | {'Val Loss':^8} | {'Val Acc':^6} | {'Elapsed':^6}")
     print("-"*80)
@@ -106,6 +107,7 @@ def train(
                     { 'Train' : avg_train_acc, 'Test' : val_acc },
                     epoch_i + 1)
     
+    writer.flush()
 
     print("\n")
     print(f"Training complete! Best accuracy: {best_accuracy:.2f}%.")
@@ -123,6 +125,7 @@ def evaluate(
 
     # Put the model into the evaluation mode. The dropout layers are disabled
     # during the test time.
+    model.to(device)
     model.eval()
 
     # Tracking variables
