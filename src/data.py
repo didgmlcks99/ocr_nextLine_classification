@@ -232,3 +232,19 @@ def getData():
             labels.append(int(d))
     
     return np.array(first), np.array(second), np.array(labels)
+
+def getCh2idx():
+
+    ch2idx = {}
+
+    with open('../records/ch2idx', 'r') as f:
+        data = f.read().splitlines()
+
+        for d in data:
+            r = d.split(': ')
+            c = r[0]
+            i = int(r[1])
+
+            ch2idx[c] = i
+
+    return ch2idx

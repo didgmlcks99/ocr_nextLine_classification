@@ -40,7 +40,6 @@ def process_splitted(first, second):
 
 def split_syll(sentence):
     splitted = split_syllables(sentence)
-    
     return splitted
 
 def split(str):
@@ -68,8 +67,9 @@ def tokenize(first, second):
     ch2idx = {}
 
     ch2idx['<pad>'] = 0
+    ch2idx['<unk>'] = 1
 
-    idx = 1
+    idx = 2
     idx, max_len, first_ls = tok(first, ch2idx, idx, max_len)
     idx, max_len, second_ls = tok(second, ch2idx, idx, max_len)
            
@@ -87,7 +87,7 @@ def enc(data, ch2idx, max_len, stat):
         else:
             s += ['<pad>'] * (max_len - len(s))
             
-        toked_id = [ch2idx.get(token) for token in s]
+        toked_id = [ch2idx.get(token, ch2idx['<unk>']) for token in s]
 
         ls.append(toked_id)
     
@@ -99,3 +99,14 @@ def encode(first, second, ch2idx, max_len):
     second2idx_np = enc(second, ch2idx, max_len, 0)
 
     return first2idx_np, second2idx_np
+
+def split_enc(data, stat, max_len, ch2idx):
+
+    if stat == 1:
+        data = (['<pad>'] * (max_len - len(data))) + data
+    else:
+        data += ['<pad>'] * (max_len - len(data))
+    
+    toked_id = [ch2idx.get(token, ch2idx['<unk>']) for token in data]
+
+    return np.array(toked_id)
