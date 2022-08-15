@@ -40,12 +40,19 @@ def getInitData():
     tot_data = []
     
     tot_data += getChatBot()
+    print('got ChatBot data!')
+
     tot_data += getKCC()
+    print('got KCC data!')
+
     tot_data += getKo()
+    print('got KO data!')
 
     random.shuffle(tot_data)
+    print('shuffled data!')
 
-    df = pd.DataFrame(tot_data, columns=['first', 'second', 'label']) 
+    df = pd.DataFrame(tot_data, columns=['first', 'second', 'label'])
+    print('saved to dataframe!')
 
     return df
 
@@ -246,5 +253,7 @@ def getCh2idx():
             i = int(r[1])
 
             ch2idx[c] = i
+    
+    print('successfully got ch2idx!')
 
     return ch2idx

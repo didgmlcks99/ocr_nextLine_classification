@@ -36,6 +36,8 @@ def process_splitted(first, second):
     first_np = linearize(first)
     second_np = linearize(second)
 
+    print('linearized complete!')
+
     return first_np, second_np
 
 def split_syll(sentence):
@@ -73,6 +75,8 @@ def tokenize(first, second):
     idx, max_len, first_ls = tok(first, ch2idx, idx, max_len)
     idx, max_len, second_ls = tok(second, ch2idx, idx, max_len)
            
+    print('done tokenizing both data!')
+
     record.recordInfo('ch2idx', ch2idx)
 
     return first_ls, second_ls, ch2idx, max_len
@@ -98,9 +102,11 @@ def encode(first, second, ch2idx, max_len):
     first2idx_np = enc(first, ch2idx, max_len, 1)
     second2idx_np = enc(second, ch2idx, max_len, 0)
 
+    print('encoding comlete!')
+
     return first2idx_np, second2idx_np
 
-def split_enc(data, stat, max_len, ch2idx):
+def syll_enc(data, stat, max_len, ch2idx):
 
     if stat == 1:
         data = (['<pad>'] * (max_len - len(data))) + data

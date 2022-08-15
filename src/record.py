@@ -9,3 +9,5 @@ def recordInfo(fn, data):
             ls.append(target)
         
         f.write('\n'.join(ls))
+    
+    print('saved ch2idx to file!')
