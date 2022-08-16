@@ -10,6 +10,7 @@ def initialize_model(
     rnn_layers=3,
     dropout=0.2,
     learning_rate=0.001,
+    weight_decay=1e-4,
     model_name="RNN",
     optim_name="Adam",
     loss_fn_name="CEL",
@@ -35,7 +36,8 @@ def initialize_model(
 
     if optim_name == "Adam":
         optimizer = optim.Adam(model.parameters(),
-                               lr=learning_rate)
+                               lr=learning_rate,
+                               weight_decay=weight_decay)
     
     if loss_fn_name == "CEL":
         loss_fn = nn.CrossEntropyLoss()
