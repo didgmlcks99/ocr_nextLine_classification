@@ -26,4 +26,4 @@ def predict(first, second, model):
     logits = model.forward(first, second)
     probs = F.softmax(logits, dim=1).squeeze(dim=0)
 
-    print(f"{probs[0]*100:.2f}% sure that the next line must be omitted.")
+    print(f"{probs[0]*100:.2f}% that next line must be omitted.")
