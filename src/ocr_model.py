@@ -141,7 +141,7 @@ class CNN(nn.Module):
             for i in range(len(kernel_sizes))
         ])
 
-        self.dropout = nn.Dropout(p=dropout)
+        # self.dropout = nn.Dropout(p=dropout)
 
 
     def forward(self, x):
@@ -155,9 +155,9 @@ class CNN(nn.Module):
             kernel_size=x_conv.shape[2]
         ) for x_conv in x_conv_list]
 
-        x_fc = torch.cat([x_pool.squeeze(dim=2) for x_pool in x_pool_list], dim=1)
+        y = torch.cat([x_pool.squeeze(dim=2) for x_pool in x_pool_list], dim=1)
 
-        y = self.dropout(x_fc)
+        # y = self.dropout(y)
 
         return y
 
@@ -218,11 +218,18 @@ class OCR_cnn(nn.Module):
 
         self.fc2 = nn.Linear(
             300, 
+            # 300
             self.n_classes
         )
 
+        # self.fc3 = nn.Linear(
+        #     300, 
+        #     self.n_classes
+        # )
+
         self.dp1 = nn.Dropout(self.dropout)
         self.dp2 = nn.Dropout(self.dropout)
+        # self.dp3 = nn.Dropout(self.dropout)
     
     def forward(self, x1, x2):
 
@@ -239,5 +246,6 @@ class OCR_cnn(nn.Module):
 
         y = self.fc1(self.dp1(F.relu(y)))
         y = self.fc2(self.dp2(F.relu(y)))
+        # y = self.fc3(self.dp3(F.relu(y)))
 
         return y
