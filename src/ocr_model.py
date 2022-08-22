@@ -103,17 +103,11 @@ class OCR_rnn(nn.Module):
     
     def forward(self, x1, x2):
 
-        print(x1.shape)
-
         a = self.emb(x1).float()
         b = self.emb(x2).float()
-
-        print(a.shape)
         
         a = self.lstm1(a)
         b = self.lstm2(b)
-
-        print(a.shape)
 
         y = torch.cat((a, b), 1)
 
