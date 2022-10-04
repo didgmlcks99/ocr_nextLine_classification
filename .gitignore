@@ -1,3 +1,4 @@
 data/
 test.*
 new.*
+__pycache__

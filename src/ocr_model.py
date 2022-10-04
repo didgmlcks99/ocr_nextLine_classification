@@ -105,7 +105,7 @@ class OCR_rnn(nn.Module):
 
         a = self.emb(x1).float()
         b = self.emb(x2).float()
-        
+
         a = self.lstm1(a)
         b = self.lstm2(b)
 
