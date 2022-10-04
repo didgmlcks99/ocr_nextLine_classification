@@ -23,18 +23,24 @@ def process(df):
 
     return first_np, second_np, label_np
 
-def linearize(data):
+def linearize(data, type):
     ls = []
 
-    for s in data:
-        d = split_syllables(s)
-        ls.append(d)
+    if type == 0:
+        for s in data:
+            d = split_syllables(s)
+            ls.append(d)
+    else:
+        for s in data:
+            i = s[::-1]
+            d = split_syllables(i)
+            ls.append(d)
     
     return np.array(ls)
 
 def process_splitted(first, second):
-    first_np = linearize(first)
-    second_np = linearize(second)
+    first_np = linearize(first, 0)
+    second_np = linearize(second, 1)
 
     print('linearized complete!')
 

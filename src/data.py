@@ -102,9 +102,12 @@ def getKCC():
 
         sentence = row[0]
 
-        if point_cnt < 5000:
-            sentence = sentence[:len(sentence)-1]
-            point_cnt += 1
+        # if point_cnt < 5000:
+        #     sentence = sentence[:len(sentence)-1]
+        #     point_cnt += 1
+
+        # 점을 모두 제거 하기        
+        sentence = sentence[:len(sentence)-1]
 
         sentence_list.append(sentence)
 
@@ -119,9 +122,12 @@ def getKCC():
 
         sentence = row[0]
 
-        if point_cnt < 5000:
-            sentence = sentence[:len(sentence)-1]
-            point_cnt += 1
+        # if point_cnt < 5000:
+        #     sentence = sentence[:len(sentence)-1]
+        #     point_cnt += 1
+
+        # 점을 모두 제거 하기   
+        sentence = sentence[:len(sentence)-1]
 
         sentence_list.append(sentence)
 
