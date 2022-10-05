@@ -117,10 +117,13 @@ def encode(first, second, ch2idx, max_len):
 
 def syll_enc(data, stat, max_len, ch2idx):
 
-    if stat == 1:
-        data = (['<pad>'] * (max_len - len(data))) + data
-    else:
-        data += ['<pad>'] * (max_len - len(data))
+    # if stat == 1:
+    #     data = (['<pad>'] * (max_len - len(data))) + data
+    # else:
+    #     data += ['<pad>'] * (max_len - len(data))
+
+    # doesn't matter for inverse
+    data = (['<pad>'] * (max_len - len(data))) + data
     
     toked_id = [ch2idx.get(token, ch2idx['<unk>']) for token in data]
 

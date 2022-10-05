@@ -6,7 +6,9 @@ import data
 def predict(first, second, model):
 
     first_syll = utils.split_syll(first)
-    second_syll = utils.split_syll(second)
+    
+    second_inverted = second[::-1]
+    second_syll = utils.split_syll(second_inverted)
 
     first = utils.split(first_syll)
     second = utils.split(second_syll)
@@ -20,6 +22,9 @@ def predict(first, second, model):
 
     first = torch.tensor(first).unsqueeze(dim=0)
     second = torch.tensor(second).unsqueeze(dim=0)
+
+    print(first)
+    print(second)
 
     model.cpu()
 
