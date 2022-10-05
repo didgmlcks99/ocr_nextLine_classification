@@ -49,4 +49,4 @@ def test(
 
     print('saved precision and recall results to file!')
     
-    return tot_pred, tot_label
+    return fin_loss, fin_acc

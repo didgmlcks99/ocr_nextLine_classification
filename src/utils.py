@@ -92,10 +92,13 @@ def enc(data, ch2idx, max_len, stat):
 
     for s in data:
 
-        if stat == 1:
-            s = (['<pad>'] * (max_len - len(s))) + s
-        else:
-            s += ['<pad>'] * (max_len - len(s))
+        # if stat == 1:
+        #     s = (['<pad>'] * (max_len - len(s))) + s
+        # else:
+        #     s += ['<pad>'] * (max_len - len(s))
+
+        # doesn't matter for inverse
+        s = (['<pad>'] * (max_len - len(s))) + s
             
         toked_id = [ch2idx.get(token, ch2idx['<unk>']) for token in s]
 
