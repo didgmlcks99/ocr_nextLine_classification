@@ -1,0 +1,3 @@
+inverted_noGudu	 |	loss: 0.09833814481680747	 |	acc: 96.89999999999999	 |	 time: 77.771 min 0.2
+inverted_noGudu2	 |	loss: 0.08782726785478492	 |	acc: 96.86666666666667	 |	 time: 77.533 min 0.5
+inverted_noGudu3	 |	loss: 0.10629417292075231	 |	acc: 97.33333333333334	 |	 time: 77.733 min
