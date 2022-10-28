@@ -1,3 +1,4 @@
+import string
 import pandas as pd
 import random
 import numpy as np
@@ -11,19 +12,21 @@ def cut(sentence):
     if lim == 1: cut = lim
     else: cut = random.randint(1, lim-1)
 
+    cut = lim // 2
+
     cut_first = ' '.join(words[:cut])
     cut_second = ' '.join(words[cut:])
 
     return cut_first, cut_second
 
-def makeData(class_cnt, cut_cnt, first, second):
+def makeData(class_num, class_cnt, cut_cnt, first, second):
 
     # first 5000 is for cut sentences
-    if class_cnt < 5000:
+    if class_cnt < class_num:
         label = 0
 
         # first 2500 is for cut sentence on first
-        if cut_cnt < 2500:
+        if cut_cnt < (class_num//2):
             c_first, c_second = cut(first)
             
             first = c_first
@@ -40,25 +43,33 @@ def makeData(class_cnt, cut_cnt, first, second):
     # next 5000 has no cuts on sentence
     else: label = 1
 
-    return [first, second, label]
+    return [first, second, label], class_cnt, cut_cnt
 
 def getInitData():
+
+    length_list = []
     tot_data = []
     
-    tot_data += getChatBot()
-    print('got ChatBot data!')
+    # tot_data += getChatBot()
+    # print('got ChatBot data!')
 
-    tot_data += getKCC()
+    tot_data += getKCC(length_list)
     print('got KCC data!')
 
-    tot_data += getKo()
-    print('got KO data!')
+    # tot_data += getKo()
+    # print('got KO data!')
 
     random.shuffle(tot_data)
     print('shuffled data!')
 
     df = pd.DataFrame(tot_data, columns=['first', 'second', 'label'])
     print('saved to dataframe!')
+
+    length_avg = sum(length_list) / len(length_list)
+
+    with open('../data/processed/split/avg_length', 'w') as f:
+        f.write(str(int(length_avf)))
+        print('wrote length avg: ' + str(int(length_avg)))
 
     return df
 
@@ -96,7 +107,7 @@ def getChatBot():
 
     return total_data
 
-def getKCC():
+def getKCC(length_list):
     kccN_txt = '../data/raw/KCC150_Korean_sentences_UTF8.txt'
     kccQ_txt = '../data/raw/KCCq28_Korean_sentences_UTF8_v2.txt'
 
@@ -105,47 +116,45 @@ def getKCC():
     
     sentence_list = []
 
-    type_cnt = 0
-    point_cnt = 0
+    data_cnt = 0
+
+    al = 30000
 
     for index, row in kccN_df.iterrows():
 
         sentence = row[0]
 
-        # if point_cnt < 5000:
-        #     sentence = sentence[:len(sentence)-1]
-        #     point_cnt += 1
-
-        # 점을 모두 제거 하기        
-        # sentence = sentence[:len(sentence)-1]
+        if len(sentence.split()) <= 9: continue
 
         sentence_list.append(sentence)
 
-        type_cnt += 1
+        data_cnt += 1
 
-        if type_cnt == 10000: break
+        if data_cnt == al: break
     
-    type_cnt = 0
+    print('data count on kccN: ' + str(data_cnt))
+    
+
+    data_cnt = 0
     point_cnt = 0
 
     for index, row in kccQ_df.iterrows():
 
         sentence = row[0]
 
-        # if point_cnt < 5000:
-        #     sentence = sentence[:len(sentence)-1]
-        #     point_cnt += 1
-
-        # 점을 모두 제거 하기   
-        # sentence = sentence[:len(sentence)-1]
+        if len(sentence.split()) <= 9: continue
 
         sentence_list.append(sentence)
 
-        type_cnt += 1
+        data_cnt += 1
 
-        if type_cnt == 10000: break
+        if data_cnt == al: break
+
+    print('data count on kccQ: ' + str(data_cnt))
     
+
     random.shuffle(sentence_list)
+
 
     class_cnt = 0
     cut_cnt = 0
@@ -157,12 +166,12 @@ def getKCC():
         first = sentence_list[i]
         second = sentence_list[i+1]
 
-        cuts = makeData(class_cnt, cut_cnt, first, second)
+        length_list.append(len(first))
+        length_list.append(len(second))
+
+        cuts, class_cnt, cut_cnt = makeData((al//2), class_cnt, cut_cnt, first, second)
 
         total_data.append(cuts)
-
-        class_cnt += 1
-        cut_cnt += 1
     
     return total_data
 
@@ -197,7 +206,7 @@ def getKo():
 def mk_initData(df, rm_gudu):
     # df.to_csv("../data/processed/data.csv", index=False, header=False)
     # df.to_excel('../data/processed/data.xlsx', index=False, header=False, sheet_name='sheet1')
-    df.to_csv("../data/processed/data", index=False, header=False)
+    df.to_csv("../data/processed/split/data", index=False, header=False)
 
     # sentences_df = df[['first', 'second']]
     # label_df = df['label']
@@ -205,22 +214,31 @@ def mk_initData(df, rm_gudu):
     sentences_list = []
     label_list = []
 
+    # removing puctuation marks
     if rm_gudu == 1:
         for index, row in df.iterrows():
-            if row['first'][len(row['first'])-1] in ['.', '?', '!', ',', ';', ':']:
-                first_sentence = row['first'][:len(row['first'])-1]
-            else:
-                first_sentence = row['first']
 
-            if row['second'][len(row['second'])-1] in ['.', '?', '!', ',', ';', ':']:
-                second_sentence = row['second'][:len(row['second'])-1]
-            else:
-                second_sentence = row['second']
+            first = row['first']
+            second = row['second']
 
-            sentences_list.append(first_sentence)
-            sentences_list.append(second_sentence)
+            first = first.translate(str.makeTrans('', '', string.punctuation))
+            second = second.translate(str.makeTrans('', '', string.punctuation))
+
+            # if row['first'][len(row['first'])-1] in ['.', '?', '!', ',', ';', ':']:
+            #     first_sentence = row['first'][:len(row['first'])-1]
+            # else:
+            #     first_sentence = row['first']
+
+            # if row['second'][len(row['second'])-1] in ['.', '?', '!', ',', ';', ':']:
+            #     second_sentence = row['second'][:len(row['second'])-1]
+            # else:
+            #     second_sentence = row['second']
+
+            sentences_list.append(first)
+            sentences_list.append(second)
             
             label_list.append(row['label'])
+    # no removing punctuation marks
     else:
         for index, row in df.iterrows():
             sentences_list.append(row['first'])
@@ -228,25 +246,14 @@ def mk_initData(df, rm_gudu):
 
             label_list.append(row['label'])
     
-    sentences_df = pd.DataFrame(sentences_list, columns=['sentence'])
     label_df = pd.DataFrame(label_list, columns=['label'])
 
-    if rm_gudu ==1:
-        to_file(sentences_list, "../data/processed/sentence_nogudu")
+    if rm_gudu == 1:
+        to_file(sentences_list, "../data/processed/split/sentence_nogudu")
     else:
-        to_file(sentences_list, "../data/processed/sentence_yesgudu")
+        to_file(sentences_list, "../data/processed/split/sentence_yesgudu")
 
-    # sentences_df.to_csv("../data/processed/sentence.csv", index=False, header=False)
-    # sentences_df.to_excel('../data/processed/sentence.xlsx', index=False, header=False, sheet_name='sheet1')
-    # sentences_df.to_csv("../data/processed/sentence", index=False, header=False)
-    # to_file(sentences_list, "../data/processed/sentence")
-
-    # label_df.to_csv("../data/processed/label.csv", index=False, header=False)
-    # label_df.to_excel('../data/processed/label.xlsx', index=False, header=False, sheet_name='sheet1')
-    label_df.to_csv("../data/processed/label", index=False, header=False)
-
-    # sentences_df.to_csv("../data/train_tokenizer.txt", index=False, header=False)
-    # to_file(sentences_list, "../data/train_tokenizer_nogudu.txt")
+    label_df.to_csv("../data/processed/split/label", index=False, header=False)
 
 def to_file(ls, fn):
 
@@ -258,9 +265,14 @@ def getData(rm_gudu):
     first = []
     second = []
     labels = []
+
+    with open('../data/processed/split/avg_length', 'r') as f:
+        avg_length = int(f.read()) // 4
+        print('avg length / 4: ' + str(avg_length))
     
+    # sentence without puctuation
     if rm_gudu == 1:
-        with open('../data/processed/sentence_nogudu', 'r') as f:
+        with open('../data/processed/split/sentence_nogudu', 'r') as f:
             sentences = f.read().splitlines()
 
             for i in range(0, len(sentences), 2):
@@ -268,7 +280,7 @@ def getData(rm_gudu):
                 first.append(str(sentences[i]))
                 second.append(str(sentences[i+1]))
     else:
-        with open('../data/processed/sentence_yesgudu', 'r') as f:
+        with open('../data/processed/split/sentence_yesgudu', 'r') as f:
             sentences = f.read().splitlines()
 
             for i in range(0, len(sentences), 2):
@@ -277,7 +289,7 @@ def getData(rm_gudu):
                 second.append(str(sentences[i+1]))
     
 
-    with open('../data/processed/label', 'r') as f:
+    with open('../data/processed/split/label', 'r') as f:
         ls = f.read().splitlines()
 
         for d in ls:

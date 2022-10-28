@@ -370,7 +370,7 @@ def getData():
 
     with open('../data/processed/relation/avg_length', 'r') as f:
         avg_length = int(f.read()) // 5
-        print('avg length / 2: ' + str(avg_length))
+        print('avg length / 5: ' + str(avg_length))
     
     with open('../data/processed/relation/sentence', 'r') as f:
         sentences = f.read().splitlines()
