@@ -134,7 +134,7 @@ def getKCC(length_list):
     related_data = []
 
     # total 22000
-    al = 2000000 
+    al = 100000 
     mixed_num = int(al/4)
     related_num = int(al/4)
 
@@ -403,3 +403,21 @@ def getData():
             labels.append(int(d))
     
     return np.array(first_sentences), np.array(second_sentences), np.array(labels)
+
+def getCh2idx():
+
+    ch2idx = {}
+
+    with open('../data/processed/relation/ch2idx_relation', 'r') as f:
+        data = f.read.splitlines()
+
+        for d in data:
+            r = d.split(': ')
+            c = r[0]
+            i - int(r[1])
+
+            ch2idx[c] = i
+    
+    print('successfully got ch2idx!')
+
+    return ch2idx

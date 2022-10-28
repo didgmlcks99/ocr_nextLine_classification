@@ -31,6 +31,7 @@ def linearize(data, type):
             d = split_syllables(s)
             ls.append(d)
     else:
+        # reverse for postfix encoder
         for s in data:
             i = s[::-1]
             d = split_syllables(i)
@@ -69,7 +70,7 @@ def tok(data, dict, idx, maxim):
     
     return idx, maxim, ls
 
-def tokenize(first, second):
+def tokenize(first, second, ch2idx_fn):
     
     max_len = -1
     ch2idx = {}
@@ -83,7 +84,7 @@ def tokenize(first, second):
            
     print('done tokenizing both data!')
 
-    record.recordInfo('ch2idx', ch2idx)
+    record.recordInfo(ch2idx_fn, ch2idx)
 
     return first_ls, second_ls, ch2idx, max_len
 

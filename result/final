@@ -1,8 +1,0 @@
-inverted_noGudu	 |	loss: 0.09833814481680747	 |	acc: 96.89999999999999	 |	 time: 77.771 min 0.2
-inverted_noGudu2	 |	loss: 0.08782726785478492	 |	acc: 96.86666666666667	 |	 time: 77.533 min 0.5
-inverted_noGudu3	 |	loss: 0.10629417292075231	 |	acc: 97.33333333333334	 |	 time: 77.733 min
-rm_gudu2sentence_ovf	 |	loss: 0.2010411966253334	 |	acc: 97.0	 |	 time: 45.105 min
-rm_gudu2sentence_dp3	 |	loss: 0.14823958509599228	 |	acc: 97.0	 |	 time: 44.681 min
-rm_gudu2sentence_wd	 |	loss: 0.11471860175952316	 |	acc: 97.1	 |	 time: 43.518 min
-rm_gudu2sentence_dp3_wd	 |	loss: 0.08373695056264599	 |	acc: 97.2	 |	 time: 45.408 min
-rm_gudu2sentence_dp5_wd	 |	loss: 0.0892348775252079	 |	acc: 97.39999999999999	 |	 time: 45.362 min

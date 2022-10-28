@@ -1,0 +1,7 @@
+split_test_1	 |	loss: 3.5454827030499776	 |	acc: 48.199999999999996	 |	 time: 3.614 min
+split_test_1	 |	loss: 0.013444636165028593	 |	acc: 99.66666666666667	 |	 time: 3.764 min
+split_test_2_	 |	loss: 3.5454827030499776	 |	acc: 48.199999999999996	 |	 time: 3.683 min
+split_test_2_	 |	loss: 0.013444636165028593	 |	acc: 99.66666666666667	 |	 time: 3.791 min
+split_test_3_	 |	loss: 3.6261963566144306	 |	acc: 49.766666666666666	 |	 time: 3.385 min
+split_test_3_	 |	loss: 3.193044726053874	 |	acc: 49.766666666666666	 |	 time: 3.4 min
+split_test_3_	 |	loss: 0.0138268363331008	 |	acc: 99.7	 |	 time: 3.325 min

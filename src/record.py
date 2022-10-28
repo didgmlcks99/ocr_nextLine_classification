@@ -1,7 +1,5 @@
-
-
 def recordInfo(fn, data):
-    with open('../records/'+fn, 'w') as f:
+    with open('../data/processed'+fn, 'w') as f:
         ls = []
 
         for key in data:

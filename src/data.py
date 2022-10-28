@@ -68,7 +68,7 @@ def getInitData():
     length_avg = sum(length_list) / len(length_list)
 
     with open('../data/processed/split/avg_length', 'w') as f:
-        f.write(str(int(length_avf)))
+        f.write(str(int(length_avg)))
         print('wrote length avg: ' + str(int(length_avg)))
 
     return df
@@ -221,8 +221,8 @@ def mk_initData(df, rm_gudu):
             first = row['first']
             second = row['second']
 
-            first = first.translate(str.makeTrans('', '', string.punctuation))
-            second = second.translate(str.makeTrans('', '', string.punctuation))
+            first = first.translate(str.maketrans('', '', string.punctuation))
+            second = second.translate(str.maketrans('', '', string.punctuation))
 
             # if row['first'][len(row['first'])-1] in ['.', '?', '!', ',', ';', ':']:
             #     first_sentence = row['first'][:len(row['first'])-1]
@@ -262,13 +262,13 @@ def to_file(ls, fn):
 
 def getData(rm_gudu):
     
-    first = []
-    second = []
+    first_sentences = []
+    second_sentences = []
     labels = []
 
     with open('../data/processed/split/avg_length', 'r') as f:
-        avg_length = int(f.read()) // 4
-        print('avg length / 4: ' + str(avg_length))
+        avg_length = int(f.read()) // 5
+        print('avg length / 5: ' + str(avg_length))
     
     # sentence without puctuation
     if rm_gudu == 1:
@@ -276,17 +276,40 @@ def getData(rm_gudu):
             sentences = f.read().splitlines()
 
             for i in range(0, len(sentences), 2):
+
+                first = sentences[i]
+                second = sentences[i+1]
+
+                if len(first) > avg_length:
+                    first_sentences.append(str(first[-avg_length:]))
+                else:
+                    first_sentences.append(str(first))
                 
-                first.append(str(sentences[i]))
-                second.append(str(sentences[i+1]))
+                
+                if len(second) > avg_length:
+                    second_sentences.append(str(second[-avg_length:]))
+                else:
+                    second_sentences.append(str(second))
+                
     else:
         with open('../data/processed/split/sentence_yesgudu', 'r') as f:
             sentences = f.read().splitlines()
 
             for i in range(0, len(sentences), 2):
                 
-                first.append(str(sentences[i]))
-                second.append(str(sentences[i+1]))
+                first = sentences[i]
+                second = sentences[i+1]
+
+                if len(first) > avg_length:
+                    first_sentences.append(str(first[-avg_length:]))
+                else:
+                    first_sentences.append(str(first))
+                
+                
+                if len(second) > avg_length:
+                    second_sentences.append(str(second[-avg_length:]))
+                else:
+                    second_sentences.append(str(second))
     
 
     with open('../data/processed/split/label', 'r') as f:
@@ -295,13 +318,13 @@ def getData(rm_gudu):
         for d in ls:
             labels.append(int(d))
     
-    return np.array(first), np.array(second), np.array(labels)
+    return np.array(first_sentences), np.array(second_sentences), np.array(labels)
 
 def getCh2idx():
 
     ch2idx = {}
 
-    with open('../records/ch2idx', 'r') as f:
+    with open('../data/processed/split/ch2idx_split_yesgudu', 'r') as f:
         data = f.read().splitlines()
 
         for d in data:
