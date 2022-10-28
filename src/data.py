@@ -2,6 +2,8 @@ import pandas as pd
 import random
 import numpy as np
 
+# cuts sentence at random index
+# in the standard of words
 def cut(sentence):
     words = sentence.split()
     lim = len(words)
@@ -15,9 +17,12 @@ def cut(sentence):
     return cut_first, cut_second
 
 def makeData(class_cnt, cut_cnt, first, second):
+
+    # first 5000 is for cut sentences
     if class_cnt < 5000:
         label = 0
 
+        # first 2500 is for cut sentence on first
         if cut_cnt < 2500:
             c_first, c_second = cut(first)
             
@@ -32,6 +37,7 @@ def makeData(class_cnt, cut_cnt, first, second):
             second = c_second
         
         class_cnt += 1
+    # next 5000 has no cuts on sentence
     else: label = 1
 
     return [first, second, label]
@@ -63,23 +69,27 @@ def getChatBot():
     data_cnt = 0
     class_cnt = 0
     cut_cnt = 0
-    label = 0
 
     total_data = []
 
+    # loop through data
     for index, row in chatBot_df.iterrows():
         
+        # save question as first and answer as second
         first = row['Q']
         second = row['A']
 
         if len(first.split()) == 1 or len(second.split()) == 1: continue
 
+        # regarding the amount of data for each class,
+        # make data: list of first, second, label 
         cuts = makeData(class_cnt, cut_cnt, first, second)
 
         total_data.append(cuts)
 
-        cut_cnt += 1
+        # keep track of first 5000 as cut and next 5000 as non-cut
         class_cnt += 1
+        cut_cnt += 1
         data_cnt += 1
 
         if data_cnt == 10000: break
@@ -107,7 +117,7 @@ def getKCC():
         #     point_cnt += 1
 
         # 점을 모두 제거 하기        
-        sentence = sentence[:len(sentence)-1]
+        # sentence = sentence[:len(sentence)-1]
 
         sentence_list.append(sentence)
 
@@ -127,7 +137,7 @@ def getKCC():
         #     point_cnt += 1
 
         # 점을 모두 제거 하기   
-        sentence = sentence[:len(sentence)-1]
+        # sentence = sentence[:len(sentence)-1]
 
         sentence_list.append(sentence)
 
@@ -140,8 +150,6 @@ def getKCC():
     class_cnt = 0
     cut_cnt = 0
 
-    label = 0
-
     total_data = []
 
     for i in range(0, len(sentence_list), 2):
@@ -153,8 +161,8 @@ def getKCC():
 
         total_data.append(cuts)
 
-        cut_cnt += 1
         class_cnt += 1
+        cut_cnt += 1
     
     return total_data
 
@@ -164,7 +172,6 @@ def getKo():
     data_cnt = 0
     class_cnt = 0
     cut_cnt = 0
-    label = 0
 
     total_data = []
 
@@ -179,65 +186,97 @@ def getKo():
 
         total_data.append(cuts)
 
-        cut_cnt += 1
         class_cnt += 1
+        cut_cnt += 1
         data_cnt += 1
 
         if data_cnt == 10000: break
 
     return total_data
 
-def mk_initData(df):
+def mk_initData(df, rm_gudu):
     # df.to_csv("../data/processed/data.csv", index=False, header=False)
     # df.to_excel('../data/processed/data.xlsx', index=False, header=False, sheet_name='sheet1')
     df.to_csv("../data/processed/data", index=False, header=False)
 
-    sentences_df = df[['first', 'second']]
-    label = df['label']
+    # sentences_df = df[['first', 'second']]
+    # label_df = df['label']
 
     sentences_list = []
     label_list = []
 
-    for index, row in df.iterrows():
-        sentences_list.append(row['first'])
-        sentences_list.append(row['second'])
+    if rm_gudu == 1:
+        for index, row in df.iterrows():
+            if row['first'][len(row['first'])-1] in ['.', '?', '!', ',', ';', ':']:
+                first_sentence = row['first'][:len(row['first'])-1]
+            else:
+                first_sentence = row['first']
 
-        label_list.append(row['label'])
+            if row['second'][len(row['second'])-1] in ['.', '?', '!', ',', ';', ':']:
+                second_sentence = row['second'][:len(row['second'])-1]
+            else:
+                second_sentence = row['second']
+
+            sentences_list.append(first_sentence)
+            sentences_list.append(second_sentence)
+            
+            label_list.append(row['label'])
+    else:
+        for index, row in df.iterrows():
+            sentences_list.append(row['first'])
+            sentences_list.append(row['second'])
+
+            label_list.append(row['label'])
     
     sentences_df = pd.DataFrame(sentences_list, columns=['sentence'])
     label_df = pd.DataFrame(label_list, columns=['label'])
 
+    if rm_gudu ==1:
+        to_file(sentences_list, "../data/processed/sentence_nogudu")
+    else:
+        to_file(sentences_list, "../data/processed/sentence_yesgudu")
+
     # sentences_df.to_csv("../data/processed/sentence.csv", index=False, header=False)
     # sentences_df.to_excel('../data/processed/sentence.xlsx', index=False, header=False, sheet_name='sheet1')
     # sentences_df.to_csv("../data/processed/sentence", index=False, header=False)
-    to_file(sentences_list, "../data/processed/sentence")
+    # to_file(sentences_list, "../data/processed/sentence")
 
     # label_df.to_csv("../data/processed/label.csv", index=False, header=False)
     # label_df.to_excel('../data/processed/label.xlsx', index=False, header=False, sheet_name='sheet1')
     label_df.to_csv("../data/processed/label", index=False, header=False)
 
-    sentences_df.to_csv("../data/train_tokenizer.txt", index=False, header=False)
-    to_file(sentences_list, "../data/train_tokenizer.txt")
+    # sentences_df.to_csv("../data/train_tokenizer.txt", index=False, header=False)
+    # to_file(sentences_list, "../data/train_tokenizer_nogudu.txt")
 
 def to_file(ls, fn):
 
     with open(fn, 'w') as f:
         f.write('\n'.join(ls))
 
-def getData():
+def getData(rm_gudu):
     
     first = []
     second = []
     labels = []
     
-    with open('../data/processed/sentence', 'r') as f:
-        sentences = f.read().splitlines()
+    if rm_gudu == 1:
+        with open('../data/processed/sentence_nogudu', 'r') as f:
+            sentences = f.read().splitlines()
 
-        for i in range(0, len(sentences), 2):
-            
-            first.append(str(sentences[i]))
-            second.append(str(sentences[i+1]))
+            for i in range(0, len(sentences), 2):
+                
+                first.append(str(sentences[i]))
+                second.append(str(sentences[i+1]))
+    else:
+        with open('../data/processed/sentence_yesgudu', 'r') as f:
+            sentences = f.read().splitlines()
+
+            for i in range(0, len(sentences), 2):
+                
+                first.append(str(sentences[i]))
+                second.append(str(sentences[i+1]))
     
+
     with open('../data/processed/label', 'r') as f:
         ls = f.read().splitlines()
 
