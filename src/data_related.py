@@ -409,12 +409,12 @@ def getCh2idx():
     ch2idx = {}
 
     with open('../data/processed/relation/ch2idx_relation', 'r') as f:
-        data = f.read.splitlines()
+        data = f.read().splitlines()
 
         for d in data:
             r = d.split(': ')
             c = r[0]
-            i - int(r[1])
+            i = int(r[1])
 
             ch2idx[c] = i
     

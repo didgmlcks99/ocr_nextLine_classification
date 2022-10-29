@@ -39,4 +39,4 @@ def predict(first, second, model, sORr):
 
     result = logits.argmax(1).unsqueeze(1)
 
-    pritn('result: ' + str(result))
+    print('result: ' + str(result))
